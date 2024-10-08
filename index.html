@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolver with Flag</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f7fa; /* Light blue background */
+        }
+        canvas {
+            /* border: 2px solid black; */
+            margin-right: 30%;
+        }
+        #flag {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: 300px; /* Adjusted for initial position */
+            left: 3000px; /* Adjusted for initial position */
+            transform: translate(-50%, -50%);
+            display: none;
+            background-color: rgb(177, 164, 164);
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="pistolCanvas" width="600" height="400"></canvas>
+<div id="flag">Bang!</div>
+
+<script>
+    // Predefined list of names
+    const names = ["Umid", "Denis", "Artem", "Hanna", "Diana", "Oleg", "Anton"];
+
+    // Canvas setup
+    const canvas = document.getElementById('pistolCanvas');
+    const ctx = canvas.getContext('2d');
+    const flag = document.getElementById('flag');
+
+    // Load the revolver image (using the image provided)
+    const revolverImage = new Image();
+    revolverImage.src = '/Users/anton/Programming/JS/randomiser/gun.png'; // Replace with correct path
+
+    revolverImage.onload = function() {
+        // Draw the revolver image onto the canvas
+        ctx.drawImage(revolverImage, 0, 0, canvas.width, canvas.height);
+    };
+
+    // Function to shoot the flag with random name
+    function shootFlag() {
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        flag.textContent = randomName;
+        flag.style.display = 'block';
+
+        // Start the flag at the nozzle of the revolver (adjusted to match the barrel position)
+        let position = 1000; // Starting from the barrel
+        flag.style.top = '340px'; // Adjusted to match the barrel height
+
+        // Animate the flag coming out of the barrel
+        const interval = setInterval(() => {
+            if (position > 1800) { // Limit the position of flag movement
+                clearInterval(interval);
+            } else {
+                position += 5;
+                flag.style.left = `${position}px`;
+            }
+        }, 20);
+
+        // Hide the flag after 3 seconds
+        setTimeout(() => {
+            flag.style.display = 'none';
+            flag.style.left = '1800px'; // Reset the flag to start position
+        }, 3500);
+    }
+
+    // Event listener to shoot the flag when canvas is clicked
+    canvas.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        ctx.drawImage(revolverImage, 0, 0, canvas.width, canvas.height); // Redraw the revolver
+        shootFlag(); // Call the flag animation
+    });
+</script>
+
+</body>
+</html>
+
